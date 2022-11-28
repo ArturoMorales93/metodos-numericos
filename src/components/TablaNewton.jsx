@@ -2,14 +2,14 @@ import axios from 'axios'
 import { Container, Table, Spinner } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 
-function Tabla({ info }) {
+function TablaNewton({ info }) {
     const [data, setData] = useState(null)
     const [error, setError] = useState(null)
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         console.log(info)
-        axios.get(`http://127.0.0.1:8000/biseccion?ecuacion=${info.ecuacion}`)
+        axios.get(`http://127.0.0.1:8000/newton`)
             .then((response) => {
                 setIsLoaded(true)
                 setData(response.data)
@@ -26,17 +26,12 @@ function Tabla({ info }) {
 
     return (
         <Container>
-            <h3>Algoritmo de la Bisección</h3>
+            <h3>Algoritmo de la Newton</h3>
             <Table striped bordered hover size='sm' variant='dark' responsive>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>x1</th>
-                        <th>x2</th>
-                        <th>f(x1)</th>
-                        <th>f(x2)</th>
-                        <th>m</th>
-                        <th>f(m)</th>
+                        <th>x</th>
+                        <th>Iteracción</th>
                         <th>error</th>
                     </tr>
                 </thead>
@@ -45,14 +40,9 @@ function Tabla({ info }) {
                         error === null ?
                             data.map((n => (
                                 <tr key={n["iteracion"]}>
+                                    <td>{n["x"]}</td>
                                     <td>{n["iteracion"]}</td>
-                                    <td>{n["x1"]}</td>
-                                    <td>{n["x2"]}</td>
-                                    <td>{n["fx1"]}</td>
-                                    <td>{n["fx2"]}</td>
-                                    <td>{n["m"]}</td>
-                                    <td>{n["fm"]}</td>
-                                    <td>{n["error"]}%</td>
+                                    <td>{n["error"].toFixed(2)}%</td>
                                 </tr>
                             ))) :
                             console.log(error)
@@ -63,4 +53,4 @@ function Tabla({ info }) {
     )
 }
 
-export default Tabla
+export default TablaNewton

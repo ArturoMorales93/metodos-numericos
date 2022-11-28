@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import { useForm, Controller } from 'react-hook-form'
-import Tabla from './Tabla'
+import TablaBiseccion from './TablaBiseccion'
 
 function Biseccion() {
     const { control, handleSubmit } = useForm()
-    const [campos, setCampos] = useState({})
+    const [tabla, setTabla] = useState()
     const [mostrarTabla, setMostrarTabla] = useState(false)
 
     const onSubmit = data => {
-        setCampos(data)
+        setTabla(<TablaBiseccion info={data} />)
         setMostrarTabla(true)
     }
 
@@ -108,7 +108,7 @@ function Biseccion() {
                 </Button>
             </Form>
 
-            {mostrarTabla && <Tabla info={campos} />}
+            {mostrarTabla && tabla}
         </div>
     )
 }
