@@ -8,9 +8,16 @@ function TablaBiseccion({ info }) {
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/biseccion?ecuacion=${info.ecuacion}&cifras=${info.cifras}&tolerancia=${info.tolerancia}&x1=${info.x1}&x2=${info.x2}`)
+        var request = ""
+        if (info.tolerancia === "" || info.tolerancia === undefined) {
+            request = `http://127.0.0.1:8000/biseccion?ecuacion=${info.ecuacion}`
+        } else {
+            request = `http://127.0.0.1:8000/biseccion?ecuacion=${info.ecuacion}&tolerancia=${info.tolerancia}`
+        }
+        axios.get(request)
             .then((response) => {
                 setIsLoaded(true)
+                setError(null)
                 setData(response.data)
             })
             .catch(error => {
@@ -18,11 +25,9 @@ function TablaBiseccion({ info }) {
                 setError(error)
             })
         // eslint-disable-next-line
-    }, [])
-    if (error) return <div>Error: {error.message}</div>
-    if (!isLoaded) return <Spinner animation="border" />
-    if (!data) return <div>Nada</div>
+    }, [info])
 
+    if (!isLoaded) return <Spinner animation="border" />
     return (
         <Container>
             {
@@ -57,7 +62,9 @@ function TablaBiseccion({ info }) {
                                     <td>{n["error"]}%</td>
                                 </tr>
                             ))) :
-                            console.log(error)
+                            <tr>
+                                <td colSpan={8}>Error: {error.message}</td>
+                            </tr>
                     }
                 </tbody>
             </Table>

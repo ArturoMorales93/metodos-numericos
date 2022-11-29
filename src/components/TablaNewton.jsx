@@ -8,10 +8,16 @@ function TablaNewton({ info }) {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        console.log(info)
-        axios.get(`http://127.0.0.1:8000/newton`)
+        var request = ""
+        if (info.tolerancia === "" || info.tolerancia === undefined) {
+            request = `http://127.0.0.1:8000/newton?ecuacion=${info.ecuacion}`
+        } else {
+            request = `http://127.0.0.1:8000/newton?ecuacion=${info.ecuacion}&tolerancia=${info.tolerancia}`
+        }
+        axios.get(request)
             .then((response) => {
                 setIsLoaded(true)
+                setError(null)
                 setData(response.data)
             })
             .catch(error => {
@@ -19,11 +25,9 @@ function TablaNewton({ info }) {
                 setError(error)
             })
         // eslint-disable-next-line
-    }, [])
-    if (error) return <div>Error: {error.message}</div>
-    if (!isLoaded) return <Spinner animation="border" />
-    if (!data) return <div>Nada</div>
+    }, [info])
 
+    if (!isLoaded) return <Spinner animation="border" />
     return (
         <Container>
             <h3>Algoritmo de la Newton</h3>
@@ -45,7 +49,9 @@ function TablaNewton({ info }) {
                                     <td>{n["error"].toFixed(2)}%</td>
                                 </tr>
                             ))) :
-                            console.log(error)
+                            <tr>
+                                <td colSpan={8}>Error: {error.message}</td>
+                            </tr>
                     }
                 </tbody>
             </Table>
